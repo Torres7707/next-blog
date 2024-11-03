@@ -3,7 +3,14 @@ import { BreadcrumbWithCustomSeparator } from "@/components/Breadcrump";
 import Container from "@/components/Container";
 import { CustomMDX } from "@/components/CustomMDX";
 import Header from "@/components/Header";
-import { notFound } from "next/navigation";
+import NotFound from "@/app/not-found";
+
+export async function generateStaticParams() {
+	const posts = getBlogPosts();
+	return posts.map((post) => ({
+		slug: post.slug,
+	}));
+}
 
 export default async function BlogPostPage({
 	params,
@@ -14,7 +21,7 @@ export default async function BlogPostPage({
 	const post = getBlogPosts().find((post) => post.slug === slug);
 
 	if (!post) {
-		notFound();
+		return <NotFound />;
 	}
 
 	return (

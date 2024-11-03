@@ -4,6 +4,12 @@ import Container from "@/components/Container";
 import CardCategory from "@/components/CardCategory";
 import Link from "next/link";
 import Header from "@/components/Header";
+import NotFound from "@/app/not-found";
+
+export async function generateStaticParams() {
+	const posts = getBlogPosts();
+	return posts.map((post) => ({ category: post.metadata.category }));
+}
 
 export default function BlogCategoryPage({
 	params,
@@ -18,7 +24,7 @@ export default function BlogCategoryPage({
 		)
 		.filter((post) => post.metadata.category === params.category);
 	if (posts.length === 0) {
-		notFound();
+		return <NotFound />;
 	}
 	return (
 		<>
