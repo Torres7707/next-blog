@@ -2,6 +2,7 @@ import {
 	Ghost,
 	Rss,
 	ArrowRight,
+	ArrowLeft,
 	Icon as LucideIcon,
 	LucideProps,
 } from "lucide-react";
@@ -27,6 +28,7 @@ export const Icons = {
 	logo: Ghost,
 	rss: Rss,
 	arrowRight: ArrowRight,
+	arrowLeft: ArrowLeft,
 	github: ({ ...props }: LucideProps) => (
 		<svg
 			role="img"

@@ -4,6 +4,8 @@ import Header from "@/components/Header";
 import MainNav from "@/components/main-nav";
 import NotFound from "@/app/not-found";
 import { CustomMDX } from "@/components/CustomMDX";
+import Link from "next/link";
+import { Icons } from "@/components/icon";
 
 export default async function ProjectPage({
 	params,
@@ -25,9 +27,17 @@ export default async function ProjectPage({
 			</div>
 			<Header>
 				<Container>
-					<h1 className="title font-semibold text-2xl tracking-tighter mt-4">
-						{repo.name}
-					</h1>
+					<div className="flex items-center gap-4">
+						<Link
+							href="/projects"
+							className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-800 hover:scale-110 transition-all dark:hover:text-gray-100"
+						>
+							<Icons.arrowLeft className="w-6 h-6 relative top-[1px]" />
+						</Link>
+						<h1 className="title font-semibold text-2xl tracking-tighter flex items-center">
+							{repo.name}
+						</h1>
+					</div>
 					<p className="text-gray-600 dark:text-gray-300 mt-2">
 						{repo.description}
 					</p>
