@@ -5,12 +5,12 @@ import { Icons } from "../icon";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetchUrl, fetcher } from "@/lib/utils";
-
+import { SkeletonCard } from "@/components/skeleton/popular-posts-skeleton";
 export default function PopularPosts() {
 	const { data, error, isLoading } = useSWR(fetchUrl, fetcher);
 
 	if (error) return <div>Error loading popular posts</div>;
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <SkeletonCard />;
 
 	return (
 		<ul className="overflow-auto">
