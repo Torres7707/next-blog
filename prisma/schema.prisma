@@ -14,17 +14,19 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+// Blog model represents individual blog posts
 model Blog {
-  id         Int      @id @default(autoincrement())
-  slug       String   @unique
-  title      String
-  category   String
-  view_count Int      @default(1)
-  updated_at DateTime @default(now()) @updatedAt
+  id         Int      @id @default(autoincrement()) // Unique identifier for each blog post
+  slug       String   @unique // URL-friendly unique identifier
+  title      String // Title of the blog post
+  category   String // Category/topic of the blog post
+  view_count Int      @default(1) // Number of times the post has been viewed
+  updated_at DateTime @default(now()) @updatedAt // Automatically tracks last update time
 }
 
+// Subscriber model manages email newsletter subscriptions
 model Subscriber {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
-  is_subscribed Boolean @default(true)
+  id            Int     @id @default(autoincrement()) // Unique identifier for each subscriber
+  email         String  @unique // Subscriber's email address
+  is_subscribed Boolean @default(true) // Subscription status flag
 }
