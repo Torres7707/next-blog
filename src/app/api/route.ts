@@ -1,7 +1,21 @@
 import { prisma } from "@/db";
 
-export async function GET(request: Request) {
-	return new Response("Hello, world!", { status: 200 });
+export async function GET() {
+	try {
+		const popularPosts = await prisma.blog.findMany({
+			orderBy: { view_count: "desc" },
+			take: 10,
+			select: {
+				title: true,
+				slug: true,
+				category: true,
+			},
+		});
+		return new Response(JSON.stringify(popularPosts), { status: 200 });
+	} catch (err) {
+		console.error("Error fetching popular posts", err);
+		return new Response("Failed to fetch popular posts", { status: 500 });
+	}
 }
 
 export async function POST(request: Request) {

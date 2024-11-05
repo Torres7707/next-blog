@@ -1,0 +1,131 @@
+---
+title: "Prisma Migrate"
+publishedAt: "2024-11-05"
+summary: "深入了解 Prisma 数据库迁移的完整指南，包括基础概念、环境配置、最佳实践以及常见问题的解决方案。"
+category: "database"
+---
+
+# Prisma 数据库迁移指南
+
+## 数据库迁移基础
+
+数据库迁移(Migration)是管理数据库结构变更的一种方式。它类似于代码的版本控制,可以追踪数据库架构的演变历史。
+
+### 什么时候需要迁移?
+
+只有在以下情况修改了 schema.prisma 文件时才需要迁移:
+
+- 添加新的数据表
+- 添加/删除字段
+- 修改字段类型
+- 添加或删除关系
+- 修改索引或约束
+
+### 什么时候不需要迁移?
+
+- 仅进行数据的增删改查操作
+- schema 没有任何变化
+- 只修改应用代码逻辑
+
+## 开发环境与生产环境
+
+### 本地开发环境
+
+在本地开发时,使用:
+
+```bash
+npx prisma migrate dev --name <migration-name>
+```
+
+这个命令会:
+
+- 创建新的迁移文件
+- 应用迁移到数据库
+- 重新生成 Prisma Client
+
+### 生产环境
+
+在生产环境中,使用:
+
+```bash
+npx prisma migrate deploy
+```
+
+这个命令会:
+
+- 应用所有待处理的迁移
+- 不会重置数据库
+- 适合生产环境使用
+
+## 环境配置
+
+### 本地开发配置
+
+```env:.env.local
+DATABASE_URL="postgresql://user:password@localhost:5432/dev_db"
+```
+
+### 生产环境配置
+
+在 Vercel Dashboard 中设置环境变量:
+
+```env
+DATABASE_URL="postgresql://user:password@production-host/prod_db"
+```
+
+## 最佳实践
+
+1. **分离环境**
+
+   - 本地开发使用本地数据库
+   - 生产环境使用生产数据库
+   - 不要在开发环境直接操作生产数据库
+
+2. **版本控制**
+
+   - 将迁移文件提交到代码仓库
+   - 不要提交包含敏感信息的 .env 文件
+   - 使用 .env.example 作为环境变量模板
+
+3. **迁移管理**
+   - 每个迁移都应该有描述性的名称
+   - 在应用迁移前先在本地测试
+   - 保持迁移历史的清晰和连续
+
+## 常见问题
+
+### db push vs migrate
+
+- `prisma db push` 适合:
+
+  - 本地快速原型开发
+  - 测试环境
+  - 不需要追踪变更的场景
+
+- `prisma migrate dev/deploy` 适合:
+  - 生产环境
+  - 团队协作
+  - 需要追踪变更的场景
+
+### 初始化项目
+
+新项目第一次部署时:
+
+```bash
+# 本地开发环境
+npx prisma migrate dev --name init
+
+# 生产环境
+npx prisma generate && npx prisma migrate deploy
+```
+
+## 结论
+
+合理使用数据库迁移可以:
+
+- 安全地管理数据库结构变更
+- 方便团队协作
+- 追踪数据库变更历史
+- 确保数据完整性
+
+记住:只有在修改数据库结构时才需要迁移,日常的数据操作不需要迁移。

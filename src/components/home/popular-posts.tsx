@@ -1,12 +1,21 @@
+"use client";
+
 import { popularPosts } from "@/lib/placeholder-data";
 import { Icons } from "../icon";
 import Link from "next/link";
+import useSWR from "swr";
+import { fetchUrl, fetcher } from "@/lib/utils";
 
 export default function PopularPosts() {
+	const { data, error, isLoading } = useSWR(fetchUrl, fetcher);
+
+	if (error) return <div>Error loading popular posts</div>;
+	if (isLoading) return <div>Loading...</div>;
+
 	return (
 		<ul className="overflow-auto">
-			{popularPosts.map((post) => (
-				<Link href={`/blog/${post.title}`} key={post.title}>
+			{data?.map((post: { title: string; slug: string; category: string }) => (
+				<Link href={`/blog/${post.category}/${post.slug}`} key={post.title}>
 					<li
 						key={post.title}
 						className="flex items-center gap-2 cursor-pointer py-2 hover:text-blue-400 group"
