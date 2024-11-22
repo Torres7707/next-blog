@@ -5,12 +5,54 @@ import { CustomMDX } from "@/components/CustomMDX";
 import Header from "@/components/Header";
 import NotFound from "@/app/not-found";
 import ReportViews from "@/components/ReportViews";
+import { baseUrl } from "@/app/sitemap";
 
 export async function generateStaticParams() {
 	const posts = getBlogPosts();
 	return posts.map((post) => ({
 		slug: post.slug,
 	}));
+}
+
+export function generateMetadata({
+	params,
+}: {
+	params: { slug: string; category: string };
+}) {
+	let post = getBlogPosts().find((post) => post.slug === params.slug);
+	if (!post) {
+		return;
+	}
+
+	let {
+		title,
+		publishedAt: publishedTime,
+		summary: description,
+		image,
+	} = post.metadata;
+
+	let ogImage = image
+		? image
+		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			type: "article",
+			publishedTime,
+			url: `${baseUrl}/blog/${post?.metadata.category}/${post?.slug}}`,
+			images: [{ url: ogImage }],
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+			images: [ogImage],
+		},
+	};
 }
 
 export default async function BlogPostPage({

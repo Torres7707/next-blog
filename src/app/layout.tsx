@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import Footer from "@/components/footer";
+import { siteConfig } from "@/config/site";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -16,8 +17,41 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Torres7707",
-	description: "Torres7707's blog",
+	title: {
+		default: siteConfig.name,
+		template: `%s | ${siteConfig.name}`,
+	},
+	description: siteConfig.description,
+	keywords: [
+		"React",
+		"Javascript",
+		"CSS",
+		"Tailwind CSS",
+		"Next.js",
+		"DataBase",
+		"Threejs",
+		"Web3",
+	],
+	authors: [
+		{
+			name: "Torres7707",
+			url: "https://github.com/Torres7707",
+		},
+	],
+	creator: "Torres7707",
+	openGraph: {
+		type: "website",
+		locale: "en_US",
+		url: siteConfig.url,
+		title: siteConfig.name,
+		description: siteConfig.description,
+		siteName: siteConfig.name,
+	},
+	icons: {
+		icon: "/favicon.ico",
+		shortcut: "/favicon-16x16.png",
+		apple: "apple-touch-icon.png",
+	},
 };
 
 export default function RootLayout({
