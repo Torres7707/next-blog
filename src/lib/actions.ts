@@ -1,11 +1,12 @@
 "use server";
+import { prisma as db } from "@/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const FormSchema = z.object({
 	id: z.number(),
-	email: z.string().min(1, { message: "Email is required" }),
+	email: z.string().min(1, { message: "Email is required." }),
 	isSubscribed: z.boolean(),
 });
 
@@ -19,36 +20,38 @@ type State = {
 };
 
 export async function createSubscriber(prevState: State, formData: FormData) {
-	const validateField = CreateSubscriber.safeParse({
-		email: formData.get("email") as string,
+	const validatedField = CreateSubscriber.safeParse({
+		email: formData.get("email"),
 	});
 
-	if (!validateField.success) {
+	if (!validatedField.success) {
 		return {
-			errors: validateField.error.flatten().fieldErrors,
-			message: "Email is required",
+			errors: validatedField.error.flatten().fieldErrors,
+			message: "Email is Required",
 		};
 	}
 
-	const { email } = validateField.data;
+	const { email } = validatedField.data;
 
 	try {
-		await prisma.subscriber.create({
+		await db.subscriber.create({
 			data: {
-				email,
+				email: email,
 			},
 		});
 		revalidatePath("/");
-		return { message: "Subscribed successfully" };
+		return { message: "Thank you for Subscribing!" };
 	} catch (error) {
 		if (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === "P2002") {
-					return { message: "Email already exists" };
+					return {
+						message: "Email already Exist in the DB",
+					};
 				}
 			}
 		}
-	}
 
-	return { message: "Some error occurred" };
+		return { message: "Database Error: Failed to create Subscriber." };
+	}
 }
